@@ -1,7 +1,13 @@
 import React from "react";
 
-const Page = () => {
-  return <div>Page</div>;
+const Page = ({ params: { type, id } }: SearchParamProps) => {
+  console.log("id:", id);
+  console.log("type:", type);
+  return (
+    <div>
+      ID:{id}-{type}
+    </div>
+  );
 };
 
 export default Page;

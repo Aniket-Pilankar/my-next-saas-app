@@ -1,7 +1,8 @@
 import React from "react";
 
 const page = () => {
-  return <div>Transformation</div>;
+  console.log("page");
+  return <div>Deltet</div>;
 };
 
 export default page;
