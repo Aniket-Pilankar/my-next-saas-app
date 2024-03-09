@@ -30,7 +30,7 @@ import {
   transformationTypes,
 } from "@/constants";
 import { CustomField } from "./CustomField";
-import { useEffect, useState, useTransition } from "react";
+import { startTransition, useEffect, useState, useTransition } from "react";
 import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import MediaUploader from "./MediaUploader";
@@ -38,6 +38,7 @@ import TransformedImage from "./TransformedImage";
 import { addImage, updateImage } from "@/lib/actions/image.actions";
 import { getCldImageUrl } from "next-cloudinary";
 import { InsufficientCreditsModal } from "./InsufficientCreditsModal";
+import { updateCredits } from "@/lib/actions/user.actions";
 
 export const formSchema = z.object({
   title: z.string(),
@@ -62,6 +63,7 @@ const TransformationForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTransforming, setIsTransforming] = useState(false);
   const [transformationConfig, setTransformationConfig] = useState(config);
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const initialValues =
@@ -108,6 +110,7 @@ const TransformationForm = ({
         prompt: values.prompt,
         color: values.color,
       };
+      console.log("imageData:", imageData);
 
       if (action === "Add") {
         try {
@@ -154,6 +157,7 @@ const TransformationForm = ({
     value: string,
     onChangeField: (value: string) => void
   ) => {
+    console.log("value:", value);
     const imageSize = aspectRatioOptions[value as AspectRatioKey];
 
     setImage((prevState: any) => ({
@@ -195,6 +199,10 @@ const TransformationForm = ({
     );
 
     setNewTransformation(null);
+
+    startTransition(async () => {
+      await updateCredits(userId, creditFee);
+    });
   };
 
   useEffect(() => {
