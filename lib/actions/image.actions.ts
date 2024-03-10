@@ -113,7 +113,7 @@ export async function getAllImages({
       secure: true,
     });
 
-    let expression = "jsm_pixelforge";
+    let expression = "folder=pixelForgee";
 
     if (searchQuery) {
       expression += ` AND ${searchQuery}`;
@@ -133,9 +133,7 @@ export async function getAllImages({
           $in: resourceIds,
         },
       };
-      console.log("searchQuery:", searchQuery);
     }
-    console.log("query:", query);
 
     const skipAmount = (Number(page) - 1) * limit;
 

@@ -1,6 +1,7 @@
 import { aspectRatioOptions } from "@/constants";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import qs from "qs";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -44,6 +45,8 @@ export const getImageSize = (
 
 // DOWNLOAD IMAGE
 export const download = (url: string, filename: string) => {
+  console.log("filename:", filename);
+  console.log("url:", url);
   if (!url) {
     throw new Error("Resource URL not provided! You need to provide one");
   }
@@ -111,3 +114,42 @@ const toBase64 = (str: string) =>
 export const dataUrl = `data:image/svg+xml;base64,${toBase64(
   shimmer(1000, 1000)
 )}`;
+
+// FORM URL QUERY
+export const formUrlQuery = ({
+  searchParams,
+  key,
+  value,
+}: FormUrlQueryParams) => {
+  console.log("value:", value);
+  console.log("key:", key);
+  console.log("searchParams:", searchParams);
+  const params = { ...qs.parse(searchParams.toString()), [key]: value };
+  console.log("params:", params);
+
+  return `${window.location.pathname}?${qs.stringify(params, {
+    skipNulls: true,
+  })}`;
+};
+
+// REMOVE KEY FROM QUERY
+export function removeKeysFromQuery({
+  searchParams,
+  keysToRemove,
+}: RemoveUrlQueryParams) {
+  const currentUrl = qs.parse(searchParams);
+  console.log("currentUrl:", currentUrl);
+
+  keysToRemove.forEach((key) => {
+    console.log("key:", key);
+    delete currentUrl[key];
+  });
+  console.log("currentUrl:1", currentUrl);
+
+  // Remove null or undefined values
+  Object.keys(currentUrl).forEach(
+    (key) => currentUrl[key] == null && delete currentUrl[key]
+  );
+
+  return `${window.location.pathname}?${qs.stringify(currentUrl)}`;
+}
