@@ -11,8 +11,6 @@ import { IImage } from "@/lib/database/models/image.model";
 import { Button } from "../ui/button";
 import { SearchField } from "./SearchField";
 
-// import { Search } from "./Search";
-
 export const Collection = ({
   hasSearch = false,
   images,
@@ -45,7 +43,7 @@ export const Collection = ({
           <p className="p-20-semibold">Empty List</p>
         </div>
       )}
-
+    </>
   );
 };
 
