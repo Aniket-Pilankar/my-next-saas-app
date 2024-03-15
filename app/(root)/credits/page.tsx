@@ -6,10 +6,8 @@ import Header from "@/components/shared/Header";
 import { Button } from "@/components/ui/button";
 import { plans } from "@/constants";
 import { getUserById } from "@/lib/actions/user.actions";
-import React from "react";
+import Checkout from "@/components/shared/Checkout";
 
-const Credits = () => {
-  return <div>Credits</div>;
 const Credits = async () => {
   const { userId } = auth();
 
@@ -37,6 +35,7 @@ const Credits = async () => {
                 <p className="p-16-regular">{plan.credits} Credits</p>
               </div>
 
+              <ul className="flex flex-col gap-5 py-9">
                 {plan.inclusions.map((inclusion) => (
                   <li
                     key={plan.name + inclusion.label}
@@ -55,6 +54,20 @@ const Credits = async () => {
                 ))}
               </ul>
 
+              {plan.name === "Free" ? (
+                <Button variant="outline" className="credits-btn">
+                  Free Consumable
+                </Button>
+              ) : (
+                <SignedIn>
+                  <Checkout
+                    plan={plan.name}
+                    amount={plan.price}
+                    credits={plan.credits}
+                    buyerId={user._id}
+                  />
+                </SignedIn>
+              )}
             </li>
           ))}
         </ul>
